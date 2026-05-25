@@ -1,0 +1,31 @@
+name: 🐾 Pet-Pairing 自動化資料管線
+
+on:
+  schedule:
+    - cron: '0 19 * * *' # 每天台灣時間凌晨 03:00 自動執行
+  workflow_dispatch: # 允許你在網頁上按按鈕手動測試執行！
+
+jobs:
+  run-crawler:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 📥 複製專案程式碼
+      uses: actions/checkout@v4
+
+    - name: 🐍 設定 Python 環境
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: 📦 安裝連線與爬蟲套件
+      run: |
+        pip install requests beautifulsoup4 pandas google-api-python-client google-auth-httplib2 google-auth-oauthlib
+
+    - name: 🔑 投放通行證金鑰
+      run: echo '${{ secrets.GDRIVE_CREDENTIALS }}' > token.json
+
+    - name: 🚀 執行自動化配對爬蟲
+      run: python crawler.py
+
+    - name: 🧹 銷毀暫存憑證
+      run: rm -f token.json
