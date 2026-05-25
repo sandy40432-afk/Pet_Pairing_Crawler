@@ -8,6 +8,11 @@ on:
 jobs:
   run-crawler:
     runs-on: ubuntu-latest
+    
+    # 🌟 加上這行環境變數，直接提早升級 Node.js 24，一秒解除 Warning！
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
     steps:
     - name: 📥 複製專案程式碼
       uses: actions/checkout@v4
